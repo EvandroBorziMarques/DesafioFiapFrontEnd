@@ -1,0 +1,48 @@
+﻿@page "/turma/update/{id}"
+
+@using Interface.Models
+@inject NavigationManager NavigationManager;
+@inject Interface.Services.ITurmaService TurmaService;
+
+<h1>Atualizar Turma</h1>
+
+<EditForm Model="turma" OnValidSubmit="UpdateTurma">
+    @* <div class="form-group mb-3">
+        <label for="alunoName">Nome</label>
+        <InputText @bind-Value="aluno.Name" class="form-control" id="alunoName" />
+    </div> *@
+
+    <div class="form-group mb-3">
+        <label for="turmaClass">Curso</label>
+        <InputText @bind-Value="turma.Class" class="form-control" id="turmaClass" />
+    </div>
+
+    @* <div class="form-group mb-3">
+        <label for="alunoPassword">Password</label>
+        <InputText @bind-Value="aluno.Password" type="password" class="form-control" id="alunoPassword" />
+    </div> *@
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <button class="btn btn-success" type="submit">Salvar</button>
+
+</EditForm>
+
+@code {
+    Turma turma = new();
+
+    [Parameter] public string id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        turma = await TurmaService.GetBy(Int32.Parse(id));
+    }
+
+    async Task UpdateTurma()
+    {
+        await TurmaService.Update(turma);
+
+        NavigationManager.NavigateTo("/");
+    }
+}

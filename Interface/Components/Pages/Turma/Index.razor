@@ -1,0 +1,65 @@
+﻿@page "/turmas"
+
+@using Interface.Models;
+@inject IJSRuntime JSRuntime
+@inject Interface.Services.ITurmaService TurmaService;
+
+<PageTitle>Turmas</PageTitle>
+
+<h1>Alunos</h1>
+
+<a href="/turma/create" class="btn btn-success">Criar</a>
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Curso</th>
+            <th>Turma</th>
+            <th>Ano</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (turmas != null && turmas.Count > 0)
+        {
+            foreach (var turma in turmas)
+            {
+                <tr>
+                    <td>@turma.Id</td>
+                    @* <td>@turma.Course</td> *@
+                    <td>@turma.Class</td>
+                    @* <td>@turma.Year</td> *@
+                    <td>
+                        <a href="/turma/update/@turma.Id" class="btn btn-warning">Atualizar</a>
+                        @* <button class="btn btn-danger" @onclick="async () => await DeleteTurma(turma.Id)">Deletar</button> *@
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+@code {
+    List<Turma> turmas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        turmas = await TurmaService.FindAll();
+    }
+
+    // async Task DeleteTurma(int id)
+    // {
+    //     bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Tem certeza que deseja deletar?");
+    //     if (confirmed is false)
+    //         return;
+
+    //     var turma = await TurmaService.GetBy(id);
+
+    //     await TurmaService.Delete(turma);
+
+    //     turmas = await TurmaService.FindAll();
+
+    //     StateHasChanged();
+    // }
+}

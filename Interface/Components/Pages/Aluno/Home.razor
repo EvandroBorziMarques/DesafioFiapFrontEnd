@@ -1,0 +1,63 @@
+﻿@page "/"
+
+@using Interface.Models;
+@inject IJSRuntime JSRuntime
+@inject Interface.Services.IAlunoService AlunoService;
+
+<PageTitle>Alunos</PageTitle>
+
+<h1>Alunos</h1>
+
+<a href="/create" class="btn btn-success">Criar</a>
+
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Usuário</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (alunos != null && alunos.Count > 0)
+        {
+            foreach (var aluno in alunos)
+            {
+                <tr>
+                    <td>@aluno.Id</td>
+                    <td>@aluno.Name</td>
+                    <td>@aluno.User</td>
+                    <td>
+                        <a href="/update/@aluno.Id" class="btn btn-warning">Atualizar</a>
+                        @* <button class="btn btn-danger" @onclick="async () => await DeleteAluno(aluno.Id)">Deletar</button> *@
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+
+@code {
+    List<Aluno> alunos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        alunos = await AlunoService.FindAll();
+    }
+
+    // async Task DeleteAluno(int id)
+    // {
+    //     bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Tem certeza que deseja deletar?");
+    //     if (confirmed is false)
+    //         return;
+
+    //     var aluno = await AlunoService.GetBy(id);
+
+    //     await AlunoService.Delete(aluno);
+
+    //     alunos = await AlunoService.FindAll();
+
+    //     StateHasChanged();
+    // }
+}
